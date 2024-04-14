@@ -1,18 +1,18 @@
-package e2;
+package ex.polyglot;
 
 import java.util.Optional;
 
 public interface Logics {
 
-    boolean aMineWasFound(Pair<Integer, Integer> position);
+    boolean aMineWasFound(int row, int col);
 
-    Optional<Integer> getCounter(Pair<Integer, Integer> position);
+    Optional<Integer> getSweptCellCounter(int row, int col);
 
-    boolean isThereFlag(Pair<Integer, Integer> position);
+    boolean isThereFlag(int row, int col);
 
-    boolean isThereMine(Pair<Integer, Integer> position);
+    boolean isThereMine(int row, int col);
 
     boolean isThereVictory();
 
-    void toggleFlag(Pair<Integer, Integer> position);
+    void toggleFlag(int row, int col);
 }
