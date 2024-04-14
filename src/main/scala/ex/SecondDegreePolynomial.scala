@@ -8,25 +8,48 @@ trait SecondDegreePolynomial:
   def constant: Double
   def firstDegree: Double
   def secondDegree: Double
-  def +(polynomial: SecondDegreePolynomial): SecondDegreePolynomial
-  def -(polynomial: SecondDegreePolynomial): SecondDegreePolynomial
-
+  @targetName("sum") def +(polynomial: SecondDegreePolynomial): SecondDegreePolynomial
+  @targetName("minus") def -(polynomial: SecondDegreePolynomial): SecondDegreePolynomial
 
 object SecondDegreePolynomial:
-  def apply(secondDegree: Double, firstDegree: Double, constant: Double): SecondDegreePolynomial = ??? // Fill here
+  def apply(secondDegree: Double, firstDegree: Double, constant: Double): SecondDegreePolynomial =
+    SecondDegreePolynomialImpl(secondDegree, firstDegree, constant)
+
+  private case class SecondDegreePolynomialImpl(
+      secondDegree: Double,
+      firstDegree: Double,
+      constant: Double
+  ) extends SecondDegreePolynomial:
+    @targetName("sum")
+    override def +(polynomial: SecondDegreePolynomial): SecondDegreePolynomial =
+      SecondDegreePolynomialImpl(
+        secondDegree + polynomial.secondDegree,
+        firstDegree + polynomial.firstDegree,
+        constant + polynomial.constant
+      )
+
+    @targetName("minus")
+    override def -(polynomial: SecondDegreePolynomial): SecondDegreePolynomial =
+      SecondDegreePolynomialImpl(
+        secondDegree - polynomial.secondDegree,
+        firstDegree - polynomial.firstDegree,
+        constant - polynomial.constant
+      )
 
 @main def checkComplex(): Unit =
-  val simplePolynomial = SecondDegreePolynomial(1.0, 0, 3)
+  val simplePolynomial  = SecondDegreePolynomial(1.0, 0, 3)
   val anotherPolynomial = SecondDegreePolynomial(0.0, 1, 0.0)
-  val fullPolynomial = SecondDegreePolynomial(3.0, 2.0, 5.0)
-  val sum = simplePolynomial + anotherPolynomial
-  println((sum, sum.secondDegree, sum.firstDegree, sum.constant)) // 1.0 * X^2 + 1.0 * X + 3.0
+  val fullPolynomial    = SecondDegreePolynomial(3.0, 2.0, 5.0)
+  val sum               = simplePolynomial + anotherPolynomial
+  assert(SecondDegreePolynomial(1, 1, 3) == sum)
+  println:
+    (sum, sum.secondDegree, sum.firstDegree, sum.constant) // 1.0 * X^2 + 1.0 * X + 3.0
   val multipleOperations = fullPolynomial - (anotherPolynomial + simplePolynomial)
-  println((multipleOperations, multipleOperations.secondDegree, multipleOperations.firstDegree, multipleOperations.constant)) // 2.0 * X^2 + 1.0 * X + 2.0
-
-/** Hints:
-  *   - implement SecondDegreePolynomial with a SecondDegreePolynomialImpl class, similar to PersonImpl in slides
-  *   - check that equality and toString do not work
-  *   - use a case class SecondDegreePolynomialImpl instead
-  *   - check equality and toString now
-  */
+  assert(SecondDegreePolynomial(2, 1, 2) == multipleOperations)
+  println:
+    (
+      multipleOperations,
+      multipleOperations.secondDegree,
+      multipleOperations.firstDegree,
+      multipleOperations.constant
+    ) // 2.0 * X^2 + 1.0 * X + 2.0
